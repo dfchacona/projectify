@@ -5,20 +5,20 @@
     background-color: black;
 }
 
-.dashboard-header p{
+.dashboard-header p {
     margin: 0;
     padding: 14px;
     color: white;
     font-weight: bold;
 }
 
-.dashboard-header img{
+.dashboard-header img {
     width: 30px;
     height: 25px;
     padding: 10px;
 }
 
-.dashboard-header button{
+.dashboard-header button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -31,7 +31,7 @@
     cursor: pointer;
 }
 
-.dashboard-content{
+.dashboard-content {
     padding: 40px;
 }
 
@@ -52,11 +52,11 @@ svg {
     align-items: center;
 }
 
-.add-dedication-form div{
+.add-dedication-form div {
     margin: 0 10px;
 }
 
-.add-dedication-form button{
+.add-dedication-form button {
     height: 35px;
     background: #157215;
     border: green;

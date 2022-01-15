@@ -15,9 +15,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import ProjectifyLogo from '../../assets/small_logo.png'
 
-import getAllDedications, { createDedication, deleteDedication, editDedication } from '../../services/DedicationService';
+import { getAllDedications,  createDedication, deleteDedication, editDedication } from '../../services/DedicationService';
 import getAllProjects from '../../services/ProjectsService';
-import { logoutService } from '../../services/AuthService';
+import logoutService from '../../services/AuthService';
 
 import './Dashboard.css';
 
@@ -34,7 +34,7 @@ export default function Dashboard() {
 
   useEffect(()=>{
     getProjects();
-  }, [])
+  }, []);
 
   function getProjects() {
     let projectsData = [];
@@ -73,17 +73,17 @@ export default function Dashboard() {
     .catch(() => {
       console.log("ERROR!")
     })
-  }
+  };
 
   function onDeleteDedication(id) {
     deleteDedication(id)
-    .then((deleteDedicationResponse) => {
+    .then(() => {
       getProjects();
     })
     .catch(() => {
       console.log("ERROR!")
     })
-  }
+  };
 
   function onCreateDedication() {
     let data = {
@@ -92,14 +92,14 @@ export default function Dashboard() {
       "pct_dedication": newDedicationPct
     }
     createDedication(data)
-    .then((createDedicationResponse) => {
+    .then(() => {
       getProjects();
     });
-  }
+  };
 
   function logout() {
     logoutService();
-  }
+  };
   
   return(
     <div>
@@ -119,62 +119,63 @@ export default function Dashboard() {
               >
                 <Typography>{project.name}</Typography>
               </AccordionSummary>
-            <AccordionDetails>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Week number</th>
-                    <th>Dedication (%)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {project.dedications && project.dedications.map((dedication) => {
-                    return (
-                      <tr
-                        key={dedication.id}
-                      >
-                        <td>{dedication.week_number}</td>
-                        <td>
-                          <TextField
-                            id={`${dedication.id}`}
-                            type="number"
-                            defaultValue={dedication.pct_dedication}
-                            onChange={(event) => onEditDedication(event.target.value, event.target.id)}
-                          />
-                        </td>
-                        <td>
-                          <button 
-                            className="delete-dedication-button"
-                            id={`${dedication.id}`}
-                            onClick={() => {onDeleteDedication(dedication.id)}}
-                          >
-                            <DeleteIcon />
-                          </button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </AccordionDetails>
-          </Accordion>
+              <AccordionDetails>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Week number</th>
+                      <th>Dedication (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {project.dedications && project.dedications.map((dedication) => {
+                      return (
+                        <tr
+                          key={dedication.id}
+                        >
+                          <td>{dedication.week_number}</td>
+                          <td>
+                            <TextField
+                              id={`${dedication.id}`}
+                              type="number"
+                              defaultValue={dedication.pct_dedication}
+                              InputProps={{ inputProps: { min: 0, max: 100 } }}
+                              onChange={(event) => onEditDedication(event.target.value, event.target.id)}
+                            />
+                          </td>
+                          <td>
+                            <button 
+                              className="delete-dedication-button"
+                              id={`${dedication.id}`}
+                              onClick={() => {onDeleteDedication(dedication.id)}}
+                            >
+                              <DeleteIcon />
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </AccordionDetails>
+            </Accordion>
           )
         })}
          <h3>Add new dedication</h3>
           <FormControl fullWidth className="add-dedication-form">
-              <Select
-                label="<--Select Project-->"
-                value={newDedicationProjectId}
-                onChange={(event) => setNewDedicationProjectId(event.target.value)}
-              >
-                {projects && projects.map((project) => {
-                    if (project.can_add) {
-                      return (
-                        <MenuItem key={`add-to-${project.id}`} value={project.id}>{project.name}</MenuItem>
-                      );
-                    }
-                    return null;
-                  })}
+            <Select
+              label="<--Select Project-->"
+              value={newDedicationProjectId}
+              onChange={(event) => setNewDedicationProjectId(event.target.value)}
+            >
+              {projects && projects.map((project) => {
+                  if (project.can_add) {
+                    return (
+                      <MenuItem key={`add-to-${project.id}`} value={project.id}>{project.name}</MenuItem>
+                    );
+                  }
+                  return null;
+              })}
             </Select>
             <TextField
               id="new_id"

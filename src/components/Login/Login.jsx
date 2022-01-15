@@ -16,7 +16,7 @@ export default function Login() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (window.sessionStorage.getItem()) {
+    if (window.sessionStorage.getItem(AUTH_TOKEN_KEY)) {
       window.location.href = "/dashboard";
     }
   });
@@ -25,15 +25,14 @@ export default function Login() {
     setError(false);
     e.preventDefault();
     await loginService(email, password)
-    .then((loginResponseData) => {
-      window.sessionStorage.setItem(AUTH_TOKEN_KEY, loginResponseData.data.token);
-      window.sessionStorage.setItem(CURRENT_WEEK_KEY, getCurrentWeek());
-      window.location.href = "/dashboard";
-    })
-    .catch(() => {
-      setError(true);
-      console.log("ERROR!")
-    })
+      .then((loginResponseData) => {
+        window.sessionStorage.setItem(AUTH_TOKEN_KEY, loginResponseData.data.token);
+        window.sessionStorage.setItem(CURRENT_WEEK_KEY, getCurrentWeek());
+        window.location.href = "/dashboard";
+      })
+      .catch(() => {
+        setError(true);
+      });
   }
 
   return(
@@ -44,17 +43,17 @@ export default function Login() {
         </div>
         <div className="login-form">
           <form onSubmit={handleSubmit}>
-          <label>
-            <p>EMAIL</p>
-            <input name="email" type="text" onChange={(event) => setEmail(event.target.value)}/>
-          </label>
-          <label>
-            <p>PASSWORD</p>
-            <input name="password" type="password" onChange={(event) => setPassword(event.target.value)}/>
-          </label>
-          <div className="login-button">
-            <button type="submit">LOG IN</button>
-          </div>
+            <label>
+              <p>EMAIL</p>
+              <input name="email" type="text" onChange={(event) => setEmail(event.target.value)}/>
+            </label>
+            <label>
+              <p>PASSWORD</p>
+              <input name="password" type="password" onChange={(event) => setPassword(event.target.value)}/>
+            </label>
+            <div className="login-button">
+              <button type="submit">LOG IN</button>
+            </div>
           </form>
         </div>
         {error &&
