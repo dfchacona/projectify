@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { AUTH_TOKEN_KEY, CURRENT_WEEK_KEY } from '../../consts';
 
-import loginService from '../../services/AuthService';
+import { loginService }from '../../services/AuthService';
 import getCurrentWeek from '../../services/Utils';
 
 import ProjectifyImage from '../../assets/logo.png'

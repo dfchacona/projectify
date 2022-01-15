@@ -17,7 +17,7 @@ import ProjectifyLogo from '../../assets/small_logo.png'
 
 import { getAllDedications,  createDedication, deleteDedication, editDedication } from '../../services/DedicationService';
 import getAllProjects from '../../services/ProjectsService';
-import logoutService from '../../services/AuthService';
+import { logoutService } from '../../services/AuthService';
 
 import './Dashboard.css';
 
