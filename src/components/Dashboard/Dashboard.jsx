@@ -9,11 +9,15 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 import getAllDedications, { createDedication, deleteDedication, editDedication } from '../../services/DedicationService';
 import getAllProjects from '../../services/ProjectsService';
 import getCurrentWeek from '../../services/Utils';
 import { logoutService } from '../../services/AuthService';
+
+import './Dashboard.css';
 
 export default function Dashboard() {
 
@@ -99,8 +103,11 @@ export default function Dashboard() {
   
   return(
     <div>
-      <h2>Project Dashboard</h2>
-      <button onClick={logout}>Logout</button>
+      <div className="dashboard-header">
+        <p>PROJECT DASHBOARD</p>
+        <button onClick={logout}>LOGOUT</button>
+      </div>
+      <div className="dashboard-content">
         {projects && projects.map((project) => {
           return (
             <Accordion>
@@ -132,7 +139,13 @@ export default function Dashboard() {
                             onChange={(event) => onEditDedication(event.target.value, event.target.id)}
                           />
                         </td>
-                        <button id={`${dedication.id}`} onClick={(event) => {onDeleteDedication(event.target.id)}}>Delete Dedication</button>
+                        <button 
+                          className="delete-dedication-button"
+                          id={`${dedication.id}`}
+                          onClick={() => {onDeleteDedication(dedication.id)}}
+                        >
+                          <DeleteIcon />
+                        </button>
                       </tr>
                     )
                   })}
@@ -143,32 +156,33 @@ export default function Dashboard() {
           )
         })}
          <h3>Add new dedication</h3>
-        <FormControl fullWidth>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={newDedicationProjectId}
-              label="Age"
-              onChange={(event) => setNewDedicationProjectId(event.target.value)}
-            >
-              {projects && projects.map((project) => {
-                  if (project.can_add) {
-                    return (
-                      <MenuItem value={project.id}>{project.name}</MenuItem>
-                    );
-                  }
-                  return null;
-                })}
-          </Select>
-          <TextField
-            id={`new_id`}
-            type="number"
-            InputProps={{ inputProps: { min: 0, max: 100 } }}
-            defaultValue={0}
-            onChange={(event) => setNewDedicationPct(event.target.value)}
-          />
-          <button onClick={onCreateDedication}>Add Dedication</button>
-        </FormControl>
+          <FormControl fullWidth className="add-dedication-form">
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={newDedicationProjectId}
+                label="Age"
+                onChange={(event) => setNewDedicationProjectId(event.target.value)}
+              >
+                {projects && projects.map((project) => {
+                    if (project.can_add) {
+                      return (
+                        <MenuItem value={project.id}>{project.name}</MenuItem>
+                      );
+                    }
+                    return null;
+                  })}
+            </Select>
+            <TextField
+              id="new_id"
+              type="number"
+              InputProps={{ inputProps: { min: 0, max: 100 } }}
+              defaultValue={0}
+              onChange={(event) => setNewDedicationPct(event.target.value)}
+            />
+            <button id="add-dedication-button" onClick={onCreateDedication}>ADD DEDICATION</button>
+          </FormControl>
+        </div>
     </div>
   );
 }
