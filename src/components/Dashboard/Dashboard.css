@@ -1,0 +1,56 @@
+.dashboard-header {
+    width: 100vw;
+    height: 45px;
+    background-color: black;
+}
+
+.dashboard-header p{
+    margin: 0;
+    padding: 14px;
+    color: white;
+    font-weight: bold;
+}
+
+.dashboard-header button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 100px;
+    height: 25px;
+    color: white;
+    border: red;
+    border-radius: 10px;
+    background-color: #bb3b24;
+    cursor: pointer;
+}
+
+.dashboard-content{
+    padding: 40px;
+}
+
+.delete-dedication-button {
+    margin: 10px;
+    border: red;
+    background-color: #bb3b24;
+}
+
+svg {
+    color: white;
+    z-index: -1;
+}
+
+.add-dedication-form {
+    flex-direction: row !important;
+    margin-left: -10px !important;
+    align-items: center;
+}
+
+.add-dedication-form div{
+    margin: 0 10px;
+}
+
+.add-dedication-form button{
+    height: 35px;
+    background: #157215;
+    border: green;
+}

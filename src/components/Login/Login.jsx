@@ -5,6 +5,8 @@ import getCurrentWeek from '../../services/Utils';
 
 import ProjectifyImage from '../../assets/logo.png'
 
+import './Login.css';
+
 export default function Login() {
 
   const [email, setEmail] = useState();
@@ -38,15 +40,15 @@ export default function Login() {
         <div className="login-form">
           <form onSubmit={handleSubmit}>
           <label>
-            <p>Username</p>
+            <p>EMAIL</p>
             <input name="email" type="text" onChange={(event) => setEmail(event.target.value)}/>
           </label>
           <label>
-            <p>Password</p>
+            <p>PASSWORD</p>
             <input name="password" type="password" onChange={(event) => setPassword(event.target.value)}/>
           </label>
-          <div>
-            <button type="submit">Submit</button>
+          <div className="login-button">
+            <button type="submit">LOG IN</button>
           </div>
           </form>
         </div>

@@ -1,0 +1,33 @@
+.login-wrapper {
+    height: 100vh;
+    width: 100vw;
+    background-image: url('../../assets/background.png');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-image {
+    margin-top: 120px;
+}
+
+.login-button {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.login-form button {
+    background-color: black;
+    height: 30px;
+    width: 100px;
+}
+
+.login-form input {
+    height: 25px;
+}
+
+.login-form p {
+    margin-bottom: 5px;
+}
