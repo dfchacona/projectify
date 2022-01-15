@@ -10,15 +10,14 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-import getAllDedications, { createDedication, editDedication } from '../../services/DedicationService';
+import getAllDedications, { createDedication, deleteDedication, editDedication } from '../../services/DedicationService';
 import getAllProjects from '../../services/ProjectsService';
 import getCurrentWeek from '../../services/Utils';
-import { CURRENT_WEEK_NUMBER } from '../../consts';
+import { logoutService } from '../../services/AuthService';
 
 export default function Dashboard() {
 
   const [projects, setProjects] = useState();
-  const [currentWeek, setCurrentWeek] = useState(1);
   const [newDedicationProjectId, setNewDedicationProjectId] = useState(1);
   const [newDedicationPct, setNewDedicationPct] = useState(0);
 
@@ -28,7 +27,6 @@ export default function Dashboard() {
 
   useEffect(()=>{
     getProjects();
-    setCurrentWeek(getCurrentWeek());
   }, [])
 
   function getProjects() {
@@ -45,7 +43,7 @@ export default function Dashboard() {
             'id' : project.id,
             'name': project.name,
             'dedications': dedicationsResponseData.data.filter(dedication => dedication.project_id === project.id),
-            'can_add': canAdd
+            'can_add': true
           });
         });
         setProjects(projectsData);
@@ -73,10 +71,20 @@ export default function Dashboard() {
     })
   }
 
+  function onDeleteDedication(id) {
+    deleteDedication(id)
+    .then((deleteDedicationResponse) => {
+      getProjects();
+    })
+    .catch(() => {
+      console.log("ERROR!")
+    })
+  }
+
   function onCreateDedication() {
     let data = {
       "project_id": newDedicationProjectId,
-      "week_number": CURRENT_WEEK_NUMBER,
+      "week_number": sessionStorage.getItem("current_week"),
       "pct_dedication": newDedicationPct
     }
     createDedication(data)
@@ -84,10 +92,15 @@ export default function Dashboard() {
       getProjects();
     });
   }
+
+  function logout() {
+    logoutService();
+  }
   
   return(
     <div>
       <h2>Project Dashboard</h2>
+      <button onClick={logout}>Logout</button>
         {projects && projects.map((project) => {
           return (
             <Accordion>
@@ -119,6 +132,7 @@ export default function Dashboard() {
                             onChange={(event) => onEditDedication(event.target.value, event.target.id)}
                           />
                         </td>
+                        <button id={`${dedication.id}`} onClick={(event) => {onDeleteDedication(event.target.id)}}>Delete Dedication</button>
                       </tr>
                     )
                   })}
@@ -149,6 +163,7 @@ export default function Dashboard() {
           <TextField
             id={`new_id`}
             type="number"
+            InputProps={{ inputProps: { min: 0, max: 100 } }}
             defaultValue={0}
             onChange={(event) => setNewDedicationPct(event.target.value)}
           />

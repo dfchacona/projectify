@@ -32,3 +32,14 @@ export async function createDedication(data) {
         }
     )
 }
+
+export async function deleteDedication(id) {
+    return axios.delete(
+        API_URL+"api/v1/dedications/"+id,
+        {
+            headers: {
+                "Authorization": window.sessionStorage.getItem("auth_token"),
+            }
+        }
+    )
+}
