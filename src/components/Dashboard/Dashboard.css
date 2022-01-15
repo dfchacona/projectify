@@ -1,4 +1,5 @@
 .dashboard-header {
+    display: inline-flex;
     width: 100vw;
     height: 45px;
     background-color: black;
@@ -9,6 +10,12 @@
     padding: 14px;
     color: white;
     font-weight: bold;
+}
+
+.dashboard-header img{
+    width: 30px;
+    height: 25px;
+    padding: 10px;
 }
 
 .dashboard-header button{

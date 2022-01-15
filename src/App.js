@@ -6,8 +6,6 @@ import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
 
-  const loggedIn = window.sessionStorage.getItem("auth_token") ? true : false; 
-
   return (
     <div className="wrapper">
       <BrowserRouter>

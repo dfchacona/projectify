@@ -31,3 +31,7 @@
 .login-form p {
     margin-bottom: 5px;
 }
+
+.login-error p {
+    color: #bb3b24;
+}

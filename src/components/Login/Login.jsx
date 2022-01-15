@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { AUTH_TOKEN_KEY, CURRENT_WEEK_KEY } from '../../consts';
+
 import loginService from '../../services/AuthService';
 import getCurrentWeek from '../../services/Utils';
 
@@ -11,22 +13,25 @@ export default function Login() {
 
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (window.sessionStorage.getItem("auth_token")) {
+    if (window.sessionStorage.getItem()) {
       window.location.href = "/dashboard";
     }
   });
 
   const handleSubmit = async e => {
+    setError(false);
     e.preventDefault();
     await loginService(email, password)
     .then((loginResponseData) => {
-      window.sessionStorage.setItem("auth_token", loginResponseData.data.token);
-      window.sessionStorage.setItem("current_week", getCurrentWeek());
+      window.sessionStorage.setItem(AUTH_TOKEN_KEY, loginResponseData.data.token);
+      window.sessionStorage.setItem(CURRENT_WEEK_KEY, getCurrentWeek());
       window.location.href = "/dashboard";
     })
     .catch(() => {
+      setError(true);
       console.log("ERROR!")
     })
   }
@@ -52,6 +57,11 @@ export default function Login() {
           </div>
           </form>
         </div>
+        {error &&
+          <div className="login-error">
+            <p>Invalid credentials</p>
+          </div>
+        }
       </div>
     </div>
   );

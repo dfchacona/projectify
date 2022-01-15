@@ -1,3 +1,5 @@
+//Code from: https://www.javatpoint.com/calculate-current-week-number-in-javascript
+
 export default function getCurrentWeek() {
     let todaydate = new Date();
     var oneJan =  new Date(todaydate.getFullYear(), 0, 1);

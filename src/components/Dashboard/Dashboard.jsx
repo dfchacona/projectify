@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { AUTH_TOKEN_KEY, CURRENT_WEEK_KEY } from '../../consts';
+
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -10,22 +12,23 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
+
+import ProjectifyLogo from '../../assets/small_logo.png'
 
 import getAllDedications, { createDedication, deleteDedication, editDedication } from '../../services/DedicationService';
 import getAllProjects from '../../services/ProjectsService';
-import getCurrentWeek from '../../services/Utils';
 import { logoutService } from '../../services/AuthService';
 
 import './Dashboard.css';
 
+
 export default function Dashboard() {
 
   const [projects, setProjects] = useState();
-  const [newDedicationProjectId, setNewDedicationProjectId] = useState(1);
+  const [newDedicationProjectId, setNewDedicationProjectId] = useState('');
   const [newDedicationPct, setNewDedicationPct] = useState(0);
 
-  if (!window.sessionStorage.getItem("auth_token")) {
+  if (!window.sessionStorage.getItem(AUTH_TOKEN_KEY)) {
     window.location.href = "/login";
   }
 
@@ -42,16 +45,16 @@ export default function Dashboard() {
         let canAdd = true;
         projectsResponseData.data.forEach(project => {
           let dedications = dedicationsResponseData.data.filter(dedication => dedication.project_id === project.id);
-          canAdd = dedications.filter(dedication => dedication.week_number === getCurrentWeek()).length === 0 ? true : false; 
+          canAdd = dedications.filter(dedication => `${dedication.week_number}` === sessionStorage.getItem(CURRENT_WEEK_KEY)).length === 0 ? true : false; 
           projectsData.push({
             'id' : project.id,
             'name': project.name,
             'dedications': dedicationsResponseData.data.filter(dedication => dedication.project_id === project.id),
-            'can_add': true
+            'can_add': canAdd
           });
         });
         setProjects(projectsData);
-        console.log(projectsData)
+        setNewDedicationProjectId(projectsData.find(project => project.can_add === true).id);
       })
       .catch(() => {
         console.log("ERROR!")
@@ -67,9 +70,6 @@ export default function Dashboard() {
       "pct_dedication": value
     }
     editDedication(id, data)
-    .then((editDedicationResponse) => {
-      console.log(editDedicationResponse);
-    })
     .catch(() => {
       console.log("ERROR!")
     })
@@ -88,7 +88,7 @@ export default function Dashboard() {
   function onCreateDedication() {
     let data = {
       "project_id": newDedicationProjectId,
-      "week_number": sessionStorage.getItem("current_week"),
+      "week_number": sessionStorage.getItem(CURRENT_WEEK_KEY),
       "pct_dedication": newDedicationPct
     }
     createDedication(data)
@@ -104,13 +104,14 @@ export default function Dashboard() {
   return(
     <div>
       <div className="dashboard-header">
+        <img src={ProjectifyLogo} alt="Projectify" />
         <p>PROJECT DASHBOARD</p>
         <button onClick={logout}>LOGOUT</button>
       </div>
       <div className="dashboard-content">
         {projects && projects.map((project) => {
           return (
-            <Accordion>
+            <Accordion key={project.id}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -129,7 +130,9 @@ export default function Dashboard() {
                 <tbody>
                   {project.dedications && project.dedications.map((dedication) => {
                     return (
-                      <tr>
+                      <tr
+                        key={dedication.id}
+                      >
                         <td>{dedication.week_number}</td>
                         <td>
                           <TextField
@@ -139,13 +142,15 @@ export default function Dashboard() {
                             onChange={(event) => onEditDedication(event.target.value, event.target.id)}
                           />
                         </td>
-                        <button 
-                          className="delete-dedication-button"
-                          id={`${dedication.id}`}
-                          onClick={() => {onDeleteDedication(dedication.id)}}
-                        >
-                          <DeleteIcon />
-                        </button>
+                        <td>
+                          <button 
+                            className="delete-dedication-button"
+                            id={`${dedication.id}`}
+                            onClick={() => {onDeleteDedication(dedication.id)}}
+                          >
+                            <DeleteIcon />
+                          </button>
+                        </td>
                       </tr>
                     )
                   })}
@@ -158,16 +163,14 @@ export default function Dashboard() {
          <h3>Add new dedication</h3>
           <FormControl fullWidth className="add-dedication-form">
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                label="<--Select Project-->"
                 value={newDedicationProjectId}
-                label="Age"
                 onChange={(event) => setNewDedicationProjectId(event.target.value)}
               >
                 {projects && projects.map((project) => {
                     if (project.can_add) {
                       return (
-                        <MenuItem value={project.id}>{project.name}</MenuItem>
+                        <MenuItem key={`add-to-${project.id}`} value={project.id}>{project.name}</MenuItem>
                       );
                     }
                     return null;
